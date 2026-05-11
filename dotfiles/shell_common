@@ -1,0 +1,279 @@
+###################################################
+#             Common Functions                    #
+###################################################
+# 0 - (success) is number, 1 - (failure) not a number
+# usage: is_number xx && do_sth_for_number
+is_number() {
+  case $1 in
+    ''|*[!0-9]*) return 1 ;; # not a number
+    *) return 0 ;; # is a number
+  esac
+}
+
+add_to_path() {
+  for var in "$@"
+  do
+    [ -d "$1" ] && [ -d "$1/bin" ] && export PATH=$PATH:$1/bin
+  done
+}
+
+
+alias psa='ps -A'
+
+# borrow from this guy: https://sorrycc.com/mac/
+# 以,开头 --> 因为这样你敲, 然后按「Tab」就可以看到所有自己定义的命令了
+alias ,ip="ipconfig getifaddr en0"
+alias ,sshconfig="vim ~/.ssh/config"
+alias ,gitconfig="vim ~/.gitconfig"
+alias ..='cd ../'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias cdqmt='cd ~/finance/QmtTrader'
+
+alias crontab="VIM_CRONTAB=true crontab"
+
+#alias vinginx='vim /usr/local/etc/nginx/nginx.conf'
+alias vinginx='vim /etc/nginx/nginx.conf'
+alias cdnginx='cd /etc/nginx/conf.d'
+alias re-nginx='sudo nginx -s reload'
+alias killp="awk '{print \$1;}' | xargs kill -9 2>/dev/null"
+
+# some more ls aliases
+# single charactor
+alias l='ls -lrth' q='exit' f='fg' g='grep -ni' # a='./a.out'
+alias a='~/bin/services.py'
+# -x means when use space to copy, it will copy to system clipboard. now use yazi instead
+#alias n='nnn -x'
+alias r='ranger' gitu='gitui' gui='gitui'
+
+# two or more characters
+# alias ll='ls -lFh'
+alias la='ls -A'   lm='ls -al|less'
+alias less='less -i' clc='clear'    c='clear'     cls='clear'
+alias his='history'  fn='find -name' cht='cht.sh' u='sudo ufw status'
+
+#alias parselog='java -classpath  $HOME/IdeaProjects/TestJava/out/production/TestJava TestParseLog'
+#alias parsesql='parselog'
+#alias parse='parselog'
+alias vihost='vim ~/hosts'   dc='docker-compose'
+
+alias codecount='python ~/git/codes/code_count.py'
+alias clean='rm -f *.o *.exe && chmod -x *.*'
+#alias clang-format='/usr/bin/clang-format-3.4'
+#alias myip='ifconfig | grep "inet addr:" | cut -d: -f1 --complement | cut -d" " -f1'
+#Fix this in mac
+alias myip='ifconfig | grep "inet " | grep -v "127.0.0.1" | awk "{print \$2}"'
+
+alias gi='add_gitignore'
+
+move_to_downloads() {
+    mv $1 $HOME/Downloads
+}
+move_to_tmp() {
+    mv $1 $HOME/tmp
+}
+
+# ----------------------- Git related alias -----------------------
+alias gb='git blame'
+if [ -x "$(command -v icdiff)" ]; then
+    # icdiff (pip install icdiff)
+    alias gd='git icdiff'
+else
+    alias gd='git diff'
+fi
+
+alias ga='git add'          gnb='git new-branch'    gnw='git new-workdir'
+alias gamend='git commit --amend --no-edit'
+alias gw='git whatchanged'  gs='git status -sb'     gsync='git sync'
+alias gc='git commit'       gt='git town'           gcl='git clone'
+alias gl=' git log --graph --all --decorate --abbrev-commit --branches --oneline'
+alias gl1='git lg1'         gl2='git lg2'           gl3='git lg3'    gl4='git lg4'
+alias gp='git pull'           pull='git pull'
+alias push='git push'       gpl='git pull'          gps='git push origin master'
+alias remote='git remote'   grv='git remote -v' grr='git remote rm'
+alias gspo='git stash pop'  gst='git stash'   gsa='git stash apply'
+alias grup='git remote update' gcp='git cherry-pick'
+
+# https://github.com/jesseduffield/lazygit
+alias lg='lazygit'
+#---------------------------------
+
+alias du1='du -d 1 -h'
+# alias grep='ag'
+alias ag='ag -i'        gr='grep -ni'
+alias dirs='dirs -v'
+alias vimrc='vim ~/.vimrc'
+alias vitmux='vim ~/.tmux.conf'
+alias auto-commit="~/bin/auto-commit.sh" autoc='auto-commit' ac='autoc'
+alias vizellij='vim ~/.config/zellij/config.kdl'
+
+alias ap='ansible-playbook'     ad='ansible-doc'    an='ansible'
+
+alias so='source ~/.shell_common'   vish='vim ~/.shell_common'
+alias sc='sudo systemctl' sa='systemd-analyze' # jc='journalctl'
+alias o='ollama'
+
+export COLOR_NC='\e[0m' # No Color
+export COLOR_WHITE='\e[1;37m'   COLOR_BLACK='\e[0;30m'
+export COLOR_BLUE='\e[0;34m'    COLOR_LIGHT_BLUE='\e[1;34m'
+export COLOR_GREEN='\e[0;32m'   COLOR_LIGHT_GREEN='\e[1;32m'
+export COLOR_CYAN='\e[0;36m'    COLOR_LIGHT_CYAN='\e[1;36m'
+export COLOR_RED='\e[0;31m'     COLOR_LIGHT_RED='\e[1;31m'
+export COLOR_PURPLE='\e[0;35m'  COLOR_LIGHT_PURPLE='\e[1;35m'
+export COLOR_BROWN='\e[0;33m'   COLOR_YELLOW='\e[1;33m'
+export COLOR_GRAY='\e[0;30m'    COLOR_LIGHT_GRAY='\e[0;37m'
+
+alias xclip='xclip -selection c'
+alias cats='highlight -O ansi' #need set syntax:e.g. -S sql
+
+alias usejava17='sdk use java 17.0.13-tem'
+alias aptupd='sudo apt update' aptins='sudo apt install -y' aptrm='sudo apt remove'
+
+# alias tree="find . | sort | sed '1d;s/^\.//;s/\/\([^/]*\)$/|--\1/;s/\/[^/|]*/|  /g'"
+
+
+
+# alias for cd
+alias cdtemp='cd ~/tmp/'        cdtmp='cd ~/tmp/'       cdtest='cd ~/test/'
+alias cdcode='cd ~/git/codes/'
+alias cdd='cd ~/Downloads'      cdp='cd ~/Pictures'     cddoc='cd ~/Documents'
+alias cdbin='cd ~/bin'          cdback='cdb'
+alias cdgit='cd ~/git'          cdnote='cd ~/Documents/work/WorkNotes' cdn='cdnote'
+alias jarunzip='jar_unzip'      mkdir='mkdir -p' cdsoft='cd ~/soft'   cdv='cd ~/Videos'  cdm='cd ~/Music'
+
+# a good tmux alternative: zellij
+alias t='tm' tt='tm-for-ssh'
+
+alias lf="ls -lrth | egrep -v '^d'" ldir="ls -lrtdh */" clip="xsel -ib"
+
+# Cheat related
+#export CHEATPATH=~/.cheat
+export CHEATCOLORS=true
+
+# for setting history length see HISTSIZE and HISTFILESIZE
+HISTSIZE=10000
+HISTFILESIZE=20000
+
+# Set utf-8 encoding (check with cmd: locale)
+export LC_ALL=en_US.UTF-8    LANG=en_US.UTF-8   LANGUAGE=en_US.UTF-8
+
+if [[ "$TERM" != "screen-256color" ]]; then
+    export TERM=xterm-256color
+fi
+
+
+#eval "$(/opt/homebrew/bin/brew shellenv)"
+#add_to_path $HOME/miniconda3/
+
+
+# ref: https://stackoverflow.com/questions/66662820/m1-docker-preview-and-keycloak-images-platform-linux-amd64-does-not-match-th
+# useful only for Mac OS Silicon M1,
+# still working but useless for the other platforms
+# Disable it as it cause trouble for my test on 2025.03.30
+#docker() {
+# if [[ `uname -m` == "arm64" ]] && [[ "$1" == "run" || "$1" == "build" ]]; then
+#    /usr/local/bin/docker "$1" --platform linux/amd64 "${@:2}"
+#  else
+#    # otherwise, the platform on mac apple silicon is: arm64
+#     /usr/local/bin/docker "$@"
+#  fi
+#}
+
+# setting for autojump
+[[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
+
+
+# memo:
+# to change node version:
+# - nvm use v20.12.2
+# - nvm list
+# - nvm install [version]
+
+alias unproxy='unset all_proxy http_proxy https_proxy HTTP_PROXY HTTPS_PROXY'
+# verify current proxy settings:  env | grep -i proxy
+
+
+# ---- Eza (better ls) -----
+alias ll="eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions"
+alias r='rate' rp='ratep'
+
+alias op='opencode'
+
+# Function to quickly jump up a specified number of levels in the directory
+up() {
+    local levels=${1:-1}  # Default to moving up one level if no argument is provided
+    local path=""
+    for ((i=1; i<=levels; i++)); do
+        path="../$path"
+    done
+    cd "$path"
+}
+
+
+
+# [Quick Start | Yazi](https://yazi-rs.github.io/docs/quick-start)
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	command rm -f -- "$tmp"
+}
+
+alias n='y'
+
+# man search, usage: ms
+# alias ms='apropos -l . | pick -od | head -1 | xargs man'
+function ms() {
+  apropos -l . | pick -od | head -n1 | awk '{print $1}' | xargs man
+}
+
+###################################################
+#             WSL related Settings                #
+###################################################
+
+# Change directory in WSL using a Windows-style path (e.g. copied from Explorer).
+wcd() {
+  local winpath="$1"
+  if [[ -z "$winpath" ]]; then
+    echo "Usage: wcd 'C:\\Users\\...\\Folder'" >&2
+    return 2
+  fi
+
+  # Convert Windows path -> WSL path (handles spaces, drive letters, etc.)
+  local wslpath
+  wslpath="$(wslpath -u "$winpath")" || return $?
+
+  cd "$wslpath" || return $?
+}
+
+
+# wcd() {
+#   cd "$(wslpath "$1")"
+# }
+
+open() {
+  [ $# -eq 0 ] && explorer.exe . && return
+
+  for arg in "$@"; do
+    [ -e "$arg" ] || { echo "Not found: $arg" >&2; return 1; }
+
+    local abs win
+    abs="$(realpath "$arg")" || return $?
+    win="$(wslpath -w "$abs")" || return $?
+
+    if [ -d "$arg" ]; then
+      explorer.exe "$win"
+    else
+      explorer.exe "$win"              # or: explorer.exe /select,"$win"
+    fi
+  done
+}
+
+# [WSL] Fix the git-gui not display issue under WSL
+alias gg='env -i HOME="$HOME" USER="$USER" LOGNAME="$LOGNAME" \
+  PATH="/usr/bin:/bin:/usr/sbin:/sbin" \
+  DISPLAY="$DISPLAY" WAYLAND_DISPLAY="$WAYLAND_DISPLAY" XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
+  /usr/bin/git gui'
+# [WSL] open win11 side git-gui from WSL
+alias ggw='/mnt/c/Program\ Files/Git/cmd/git-gui.exe'
