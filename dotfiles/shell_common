@@ -17,6 +17,19 @@ add_to_path() {
   done
 }
 
+source_if_exists() {
+  [ -f "$1" ] && . "$1"
+}
+
+# used as: if [ $(isMac) -eq 1 ]; then
+isMac() {
+    OSNAME=`uname`
+    if [[ $OSNAME == 'Darwin' ]]; then
+      echo 1
+    else
+      echo 0
+    fi
+}
 
 alias psa='ps -A'
 
@@ -180,8 +193,7 @@ fi
 #}
 
 # setting for autojump
-[[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
-
+source_if_exists $HOME/.autojump/etc/profile.d/autojump.sh
 
 # memo:
 # to change node version:

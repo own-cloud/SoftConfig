@@ -1,0 +1,144 @@
+# Dependency: 
+# sudo apt install -y xsel
+
+if [ -f ~/.shell_common ]; then
+    . ~/.shell_common
+fi
+
+
+# Set up the prompt
+setopt prompt_subst
+autoload -Uz promptinit
+promptinit
+#prompt adam1
+
+
+# Customize the PS1
+autoload -U colors && colors
+
+# Set colors for ls and grep
+alias ls='ls --color=auto'
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+setopt histignorealldups sharehistory
+
+# Use emacs keybindings even if our EDITOR is set to vi
+bindkey -e
+
+# improve zsh's ctrl+p/n command history search
+if [ -f ~/.zsh-history-substring-search.zsh ]; then
+    source ~/.zsh-history-substring-search.zsh
+    bindkey '^P' history-substring-search-up
+    bindkey '^N' history-substring-search-down
+fi
+
+# unbind Ctrl+S for fwd-i-search
+bindkey -r '^S'
+
+# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+
+# Use modern completion system
+autoload -Uz compinit
+compinit
+
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
+export PYTHONSTARTUP=~/.pythonrc
+
+# turn off Ctrl+S XOFF(XON is Ctrl + Q)
+stty ixany
+stty ixoff -ixon
+stty stop undef
+stty start undef
+
+setopt auto_cd
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export CHEATCOLORS=true
+export EDITOR=vim
+#[ -f ~/.cheat/cheat.zsh ] && source ~/.cheat/cheat.zsh
+# tmux > /dev/null 2>&1
+#
+# Use Ctrl-Z to switch back to Vim
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    BUFFER="fg"
+    zle accept-line
+  else
+    zle push-input
+    zle clear-screen
+  fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
+
+# Stop C-D to exit zsh, make it clear screen
+setopt IGNORE_EOF
+fancy-ctrl-d () {
+    zle clear-screen
+}
+zle -N fancy-ctrl-d
+
+#Using sk to replace fzf if it exists
+if [[ -n `command -v sk` ]]; then
+    fzf-file-widget() {
+      LBUFFER="${LBUFFER}$(sk -m)"
+      local ret=$?
+      zle redisplay
+      return $ret
+    }
+    bindkey '^T' fzf-file-widget
+fi
+
+# relies on xsel: sudo apt install xsel
+copy-path-widget() {
+    if [[ $(isMac) -eq 1 ]]; then
+        cur_path=$(pwd)
+        echo -n ${cur_path} | pbcopy
+    else
+        `pwd | head -c -1 | xsel -ib`
+    fi
+}
+
+copy-branch-widget() {
+    dir=`pwd`
+    if `git -C $dir rev-parse 2>/dev/null` ; then
+        if [[ $(isMac) -eq 1 ]]; then
+            branch_name=$(git rev-parse --abbrev-ref HEAD)
+            echo -n ${branch_name} | pbcopy
+        else
+            `git rev-parse --abbrev-ref HEAD | head -c -1 | xsel -ib`
+        fi
+
+    else
+        echo -n "It's not a git repo. -_-"
+        zle accept-line
+    fi
+}
+
+zle -N copy-path-widget{,}
+zle -N copy-branch-widget{,}
+
+bindkey '^Y' copy-path-widget
+bindkey '^O' copy-branch-widget

@@ -30,4 +30,5 @@ add_link() {
 
 add_link "$SCRIPTPATH/shell_common"  "$HOME/.shell_common"
 add_link "$SCRIPTPATH/gitconfig"  "$HOME/.gitconfig"
+add_link "$SCRIPTPATH/zshrc.pre-oh-my-zsh"  "$HOME/.zshrc.pre-oh-my-zsh"
 echo "Successfully make soft link to $HOME (OK: $ok, NG: $ng)"
