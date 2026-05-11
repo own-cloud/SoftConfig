@@ -1,0 +1,165 @@
+;[user]
+ # for local, use: git config user.name "xxx" && git config user.email "yyy"
+;	email = xxx
+;	name = yyy
+[include]
+    path = ~/.gitconfig.local
+[push]
+	default = simple
+[alias]
+    s = status
+    st = stash
+    d = diff
+    ci = commit
+    co = checkout
+    br = branch
+    gr = grep -I -n
+    fo = fetch origin
+    cd = checkout origin/develop
+    rc = rebase --continue
+    diffc = diff --cached 
+    stat = log --stat
+    unstage = reset HEAD --
+    uncommit = reset --soft HEAD~ # undo last commit (redo: -c ORIG_HEAD)
+    last = log -1 HEAD
+    pick= cherry-pick
+    lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+    lg3 = log --graph --abbrev-commit --decorate --date=relative --all
+    lg4 = log --graph --oneline --decorate --date=relative --all
+    l = log --pretty=colored
+    wc = whatchanged
+    mt = mergetool
+    shallow-clone = clone --depth 1
+    pl = pull
+    ps = push
+    c = commit
+    f = fetch
+    rb = rebase
+    a = add
+    bi = bisect
+    cl = clone
+    i = init
+    h = help
+    t = tag
+    sh = show
+    rs = reset
+    m = merge
+    g = grep
+	change-commits = "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \"if [[ \\\"$`echo $VAR`\\\" = '$OLD' ]]; then export $VAR='$NEW'; fi\" $@; }; f"
+; Use vimdiff as diff tool
+; [diff]
+;     tool = default-difftool
+; [difftool "default-difftool"]
+;     cmd = vim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE '+syntax off'
+; [difftool]
+;     prompt = false
+
+
+; IMPORTANT! Comment out below two lines to use build-in git diff
+; [diff]
+	; external = ~/bin/mydiff-wrapper.sh
+
+; !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+; To temporately use one merge tool, we can use: git mergetool --tool xxx
+
+; Config merge tool as kdiff3
+; [merge]
+;     tool = kdiff3
+; [mergetool "kdiff3"]
+;     cmd = "/usr/bin/kdiff3" $BASE $LOCAL $REMOTE -o $MERGED
+;     prompt = false
+
+; Config merge tool as beyond compare
+; [merge]
+;     tool = bc3
+; [mergetool]
+;     bc3 = trustExitCode
+
+; Config merge tool as vimdiff/diffconflicts [check ~/bin/diffconlits for more help]
+; [merge]
+; 	conflictstyle = diff3
+; 	tool = diffconflicts
+; [mergetool]
+; 	prompt = false
+; 	keepBackup = false
+; [mergetool "diffconflicts"]
+; 	cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
+; 	trustExitCode = true
+
+; Config merge tool as meld
+[merge]
+	; tool = meld
+[mergetool "meld"]
+; comment out this line if you want to use 3-way merge
+    cmd = meld $REMOTE $LOCAL -o $MERGED
+    meld = trustExitCode
+
+[guitool "gvim"]
+	cmd = gvim $FILENAME
+	noconsole = yes
+	needsfile = yes
+[guitool "trimTail"]
+	cmd = trimTail $FILENAME
+	noconsole = yes
+	needsfile = yes
+[guitool "Recent log"]
+	cmd = git log --oneline -n 10
+[pretty]
+  colored = format:%Cred%h%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset
+;[core]
+;	autocrlf = input
+;	quotepath = off
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[gui]
+	encoding = utf-8
+	fontui = -family \"Noto Sans CJK SC\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
+	fontdiff = -family \"Noto Sans CJK SC\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
+	fonttabular = -family \"Noto Sans CJK SC\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
+#[commit]
+    #template = /Users/ross/.gitmessage
+[icdiff]
+	options = --highlight --line-numbers
+[credential]
+	helper = store
+[core]
+	quotepath = false
+	excludesfile = /home/ross/.gitignore_global
+    # ref: https://www.josean.com/posts/7-amazing-cli-tools
+    # need to install git-delta: sudo apt install git-delta
+    pager = delta
+	editor = vim
+	autocrlf = false
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true    # use n and N to move between diff sections
+    side-by-side = true
+
+    # delta detects terminal colors automatically; set one of these to disable auto-detection
+    # dark = true
+    # light = true
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+    colorMoved = default
+
+[i18n]
+	commitencoding = UTF-8
+	logoutputencoding = UTF-8
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+[init]
+	defaultBranch = main

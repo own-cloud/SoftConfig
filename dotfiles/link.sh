@@ -29,4 +29,5 @@ add_link() {
 }
 
 add_link "$SCRIPTPATH/shell_common"  "$HOME/.shell_common"
+add_link "$SCRIPTPATH/gitconfig"  "$HOME/.gitconfig"
 echo "Successfully make soft link to $HOME (OK: $ok, NG: $ng)"
